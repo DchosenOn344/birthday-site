@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday ❤️</title>
+
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: black;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
+
+    .content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white;
+        z-index: 2;
+        width: 90%;
+        max-width: 900px;
+    }
+
+    h1 {
+        font-size: 40px;
+        color: #ff4da6;
+    }
+
+    h2 {
+        color: #ff99cc;
+    }
+
+    button {
+        padding: 12px 25px;
+        font-size: 18px;
+        border: none;
+        border-radius: 25px;
+        background: #ff4da6;
+        color: white;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: transform 0.2s;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+    }
+
+    .message {
+        display: none;
+        margin-top: 20px;
+        font-size: 18px;
+        max-width: 500px;
+        line-height: 1.6;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Image container - hidden by default, only shows after click */
+    .image-container {
+        display: none;
+        margin-top: 20px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* FIX: Image now horizontal (landscape) orientation */
+    img {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        border-radius: 20px;
+        box-shadow: 0 0 20px #ff4da6;
+    }
+
+    /* 💖 Floating hearts */
+    .heart {
+        position: fixed;
+        bottom: -20px;
+        font-size: 20px;
+        color: #ff4da6;
+        animation: floatUp linear infinite;
+        z-index: 1;
+        opacity: 0.8;
+        pointer-events: none;
+    }
+
+    @keyframes floatUp {
+        0% {
+            transform: translateY(0) scale(1);
+            opacity: 0.8;
+        }
+        100% {
+            transform: translateY(-100vh) scale(1.5);
+            opacity: 0;
+        }
+    }
+
+    /* 🌸 Bouquet of Flowers Floating Animation */
+    .flower {
+        position: fixed;
+        bottom: -50px;
+        pointer-events: none;
+        z-index: 1;
+        font-size: 30px;
+        animation: floatFlower linear infinite;
+        filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.5));
+    }
+
+    @keyframes floatFlower {
+        0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 0.9;
+        }
+        100% {
+            transform: translateY(-120vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    /* Flower bouquet class */
+    .flower-bouquet {
+        position: fixed;
+        bottom: -60px;
+        pointer-events: none;
+        z-index: 1;
+        font-size: 35px;
+        animation: floatBouquet linear infinite;
+        filter: drop-shadow(0 0 8px rgba(255, 77, 166, 0.6));
+    }
+
+    @keyframes floatBouquet {
+        0% {
+            transform: translateY(0) rotate(-5deg) scale(0.8);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-120vh) rotate(15deg) scale(1.2);
+            opacity: 0;
+        }
+    }
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="content">
+    <h1>Happy Birthday ❤️</h1>
+    <h2>SAYANG</h2>
+
+    <button onclick="showMessage()">Click for Surprise 💌</button>
+
+    <div class="message" id="msg">
+        I used to think life was just meant to be lived, day by day, nothing more. But then you came, and suddenly I understood what it meant for the world to feel bright. You didn't just walk into my life—you slipped in like the first light of dawn, soft and quiet, and before I knew it, you had painted every corner of my world with color 💖<br><br>
+
+        I still remember the moment I first knew you were different. It wasn't because you were perfect, but because with you, I felt like I could finally be my truest self. And then I got to know you deeper—I saw the way you laugh until you can't breathe, the way you care so deeply without expecting anything back, the way you look when you're tired but still refuse to give up. That was when I realized I wasn't just falling for you. I had already fallen, all the way 💪❤️<br><br>
+
+        I can't imagine living without you, you were the first ever person to make me feel loved and appreciated and had never failed to put a smile on my face ever since I met you 🥺<br><br>
+
+        Every day with you feels like a book I never want to finish reading. You made love songs that once felt ordinary suddenly make sense. You made me believe that fate isn't just a word—because you, Nur Atiqah Aliya, you were meant for me 💕<br><br>
+
+        Today is your birthday, and I just want you to know one thing: in a life full of crossroads and uncertainties, you are not just a stop along the way. You are my way home. Happy birthday, my love. Thank you for being born, and for choosing me to love you &lt;3
+    </div>
+
+    <!-- Image container: HIDDEN initially, only shows after surprise click -->
+    <div class="image-container" id="photoContainer">
+        <img id="photo" src="yourphoto.jpg" alt="Birthday Love">
+    </div>
+
+    <audio id="music" src="music.mp3"></audio>
+</div>
+
+<script>
+// MATRIX BACKGROUND
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const letters = "SAYANGG❤★0123456789";
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+
+const drops = [];
+for (let i = 0; i < columns; i++) {
+    drops[i] = Math.random() * canvas.height;
+}
+
+function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#ff4da6";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+
+        drops[i]++;
+    }
+}
+
+setInterval(draw, 35);
+
+// Flag to prevent multiple triggers
+let surpriseTriggered = false;
+
+// SHOW MESSAGE + MUSIC + HEARTS + IMAGE (only after click) + FLOWERS
+function showMessage() {
+    if (surpriseTriggered) return;
+    surpriseTriggered = true;
+    
+    // Show the message
+    document.getElementById("msg").style.display = "block";
+    
+    // Show image container (was hidden, now appears)
+    const photoContainer = document.getElementById("photoContainer");
+    photoContainer.style.display = "flex";
+    
+    // Play music if available
+    const music = document.getElementById("music");
+    music.play().catch(e => console.log("Music autoplay blocked - user interaction needed"));
+    
+    // Start floating hearts animation
+    startHearts();
+    
+    // Start floating flowers & bouquets
+    startFlowers();
+    
+    // Optional: Change button text after click
+    const btn = document.querySelector("button");
+    btn.innerHTML = "🎉 Surprise! Love You! 🎉";
+    btn.style.opacity = "0.8";
+    btn.style.cursor = "default";
+}
+
+// 💖 HEARTS FUNCTION
+let heartsInterval = null;
+function startHearts() {
+    if (heartsInterval) return;
+    
+    heartsInterval = setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤";
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (15 + Math.random() * 20) + "px";
+        heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+            if (heart && heart.remove) heart.remove();
+        }, 6000);
+    }, 300);
+}
+
+// 🌸🌸🌸 BOUQUET OF FLOWERS FLOATING FUNCTION 🌸🌸🌸
+let flowerInterval = null;
+let burstInterval = null;
+
+function startFlowers() {
+    // Array of beautiful flower emojis and bouquet combinations
+    const flowerEmojis = [
+        "🌹", "🌸", "🌷", "🌼", "🌻", "🌺", "💐", "🌸", "🌿🌸", "🌷💐", 
+        "🌹🌸", "💐🌷", "🌼🌻", "🌸🌹", "🌷🌼", "🌺🌸", "💐🌹"
+    ];
+    
+    // Bouquet combinations (multiple flowers together)
+    const bouquetEmojis = [
+        "💐🌹🌸", "🌸🌷💐", "🌼🌻🌹", "🌺🌸💐", "🌷🌼🌸", "💐🌷🌹", 
+        "🌹🌻🌼", "🌸💐🌷", "🌼🌷💐", "🌻🌹🌸", "💐🌸🌷🌹"
+    ];
+    
+    // Create floating flowers at different intervals if not already started
+    if (flowerInterval) return;
+    
+    flowerInterval = setInterval(() => {
+        // Randomly choose between single flower or bouquet
+        const isBouquet = Math.random() > 0.6; // 40% chance for bouquet, 60% for single flower
+        
+        let flowerElement;
+        let emoji;
+        
+        if (isBouquet) {
+            flowerElement = document.createElement("div");
+            flowerElement.classList.add("flower-bouquet");
+            // Pick a random bouquet combination
+            emoji = bouquetEmojis[Math.floor(Math.random() * bouquetEmojis.length)];
+        } else {
+            flowerElement = document.createElement("div");
+            flowerElement.classList.add("flower");
+            // Pick a random single flower
+            emoji = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+        }
+        
+        flowerElement.innerHTML = emoji;
+        
+        // Random horizontal position
+        flowerElement.style.left = Math.random() * 100 + "vw";
+        
+        // Random size variation for more natural look
+        let sizeVariation;
+        if (isBouquet) {
+            sizeVariation = 25 + Math.random() * 25; // 25px to 50px for bouquets
+            flowerElement.style.fontSize = sizeVariation + "px";
+            flowerElement.style.animationDuration = (4 + Math.random() * 4) + "s"; // 4-8 seconds
+        } else {
+            sizeVariation = 20 + Math.random() * 25; // 20px to 45px for single flowers
+            flowerElement.style.fontSize = sizeVariation + "px";
+            flowerElement.style.animationDuration = (3.5 + Math.random() * 4) + "s"; // 3.5-7.5 seconds
+        }
+        
+        document.body.appendChild(flowerElement);
+        
+        // Remove flower after animation completes
+        setTimeout(() => {
+            if (flowerElement && flowerElement.remove) {
+                flowerElement.remove();
+            }
+        }, parseFloat(flowerElement.style.animationDuration) * 1000);
+        
+    }, 400); // Create new flower every 400ms for continuous floating effect
+    
+    // Also add bursts of flowers at random intervals (special surprise)
+    burstInterval = setInterval(() => {
+        // Create a small burst of 3-6 flowers at once
+        const burstCount = Math.floor(Math.random() * 4) + 3; // 3-6 flowers
+        for (let i = 0; i < burstCount; i++) {
+            setTimeout(() => {
+                const isBouquetBurst = Math.random() > 0.5;
+                const flowerBurst = document.createElement("div");
+                
+                if (isBouquetBurst) {
+                    flowerBurst.classList.add("flower-bouquet");
+                    const bouquets = ["💐🌹🌸", "🌸🌷💐", "🌼🌻🌹", "🌺🌸💐", "🌷🌼🌸", "💐🌷🌹", "🌻🌹💐🌸"];
+                    flowerBurst.innerHTML = bouquets[Math.floor(Math.random() * bouquets.length)];
+                    flowerBurst.style.fontSize = (28 + Math.random() * 22) + "px";
+                    flowerBurst.style.animationDuration = (4 + Math.random() * 3.5) + "s";
+                } else {
+                    flowerBurst.classList.add("flower");
+                    const flowers = ["🌹", "🌸", "🌷", "🌼", "🌻", "🌺", "💐", "🌿🌸", "🌷🌸"];
+                    flowerBurst.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
+                    flowerBurst.style.fontSize = (22 + Math.random() * 23) + "px";
+                    flowerBurst.style.animationDuration = (3.5 + Math.random() * 3.5) + "s";
+                }
+                
+                flowerBurst.style.left = Math.random() * 100 + "vw";
+                document.body.appendChild(flowerBurst);
+                
+                setTimeout(() => {
+                    if (flowerBurst && flowerBurst.remove) flowerBurst.remove();
+                }, 8000);
+            }, i * 80);
+        }
+    }, 8000); // Flower burst every 8 seconds
+}
+
+// Optional: Function to stop flowers (if needed)
+function stopFlowers() {
+    if (flowerInterval) {
+        clearInterval(flowerInterval);
+        flowerInterval = null;
+    }
+    if (burstInterval) {
+        clearInterval(burstInterval);
+        burstInterval = null;
+    }
+    // Remove all existing flowers
+    document.querySelectorAll('.flower, .flower-bouquet').forEach(flower => flower.remove());
+}
+
+// Resize fix
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
