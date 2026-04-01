@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Happy Birthday Nur Atiqah Aliya ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a0a2a 100%);
+            font-family: 'Segoe UI', 'Poppins', 'Quicksand', system-ui, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Matrix Canvas Background */
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* Heart Gallery Container */
+        .heart-gallery {
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .title-section {
+            margin-bottom: 40px;
+        }
+
+        .title-section h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #ff99cc, #ff4da6, #ff66aa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(255, 77, 166, 0.5);
+            animation: titleGlow 2s ease-in-out infinite;
+        }
+
+        .title-section p {
+            color: #ffbbdd;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 77, 166, 0.3); }
+            50% { text-shadow: 0 0 40px rgba(255, 77, 166, 0.8); }
+        }
+
+        /* Heart Grid - where hearts will appear */
+        .hearts-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            min-height: 400px;
+        }
+
+        /* Individual Heart Card */
+        .heart-card {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            animation: heartAppear 0.5s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .heart-card:hover {
+            transform: translateY(-10px) scale(1.05);
+        }
+
+        /* Heart shape using SVG */
+        .heart-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 5px 15px rgba(255, 77, 166, 0.4));
+            transition: filter 0.3s;
+        }
+
+        .heart-card:hover .heart-svg {
+            filter: drop-shadow(0 8px 25px rgba(255, 77, 166, 0.7));
+        }
+
+        .heart-bg {
+            fill: url(#heartGradient);
+            stroke: #ff99cc;
+            stroke-width: 2;
+            transition: all 0.3s;
+        }
+
+        .heart-card:hover .heart-bg {
+            stroke: #ffddaa;
+            stroke-width: 3;
+        }
+
+        /* Image inside heart */
+        .heart-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 65%;
+            height: 65%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+            z-index: 2;
+            background: #ff99cc;
+        }
+
+        /* Heart appear animation */
+        @keyframes heartAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(-180deg);
+            }
+            50% {
+                transform: scale(1.1) rotate(5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        /* Surprise Button */
+        .surprise-btn {
+            background: linear-gradient(135deg, #ff4da6, #ff1a6e);
+            border: none;
+            padding: 16px 42px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border-radius: 60px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 30, 110, 0.5);
+            transition: all 0.3s;
+            margin: 30px 0 20px;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .surprise-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 30, 110, 0.8);
+        }
+
+        .surprise-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Message Section */
+        .message-section {
+            display: none;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 40px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 30px auto;
+            border: 1px solid #ff77aa;
+            animation: messageGlow 0.8s ease-out;
+        }
+
+        @keyframes messageGlow {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-section p {
+            color: #fff0f5;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .signature {
+            margin-top: 20px;
+            color: #ffbbdd;
+            font-style: italic;
+            text-align: right;
+        }
+
+        /* Floating Hearts & Flowers */
+        .floating-item {
+            position: fixed;
+            bottom: -50px;
+            pointer-events: none;
+            z-index: 999;
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Heart Building Animation Indicator */
+        .building-status {
+            margin: 20px 0;
+            color: #ff99cc;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff4da6;
+        }
+
+        .heart-count {
+            font-size: 2rem;
+            color: #ff66aa;
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .heart-card {
+                width: 150px;
+                height: 150px;
+            }
+            .title-section h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="matrixCanvas"></canvas>
+
+<div class="main-content">
+    <div class="heart-gallery">
+        <div class="title-section">
+            <h1>❤️ Heart of Love ❤️</h1>
+            <p>Building hearts filled with memories for you, Nur Atiqah Aliya</p>
+        </div>
+
+        <div class="building-status" id="buildingStatus">
+            <span>✨ Building your heart gallery... ✨</span>
+            <div class="heart-count" id="heartCounter">0 / 9</div>
+        </div>
+
+        <div class="hearts-grid" id="heartsGrid"></div>
+
+        <button class="surprise-btn" id="surpriseBtn" style="display: none;">🎁 Click for Full Surprise 🎁</button>
+
+        <div class="message-section" id="messageSection">
+            <p id="loveMessage"></p>
+            <div class="signature" id="signatureText"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== MATRIX BACKGROUND ====================
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+    
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+    
+    const matrixChars = "❤️💖🌸🌷✨🎂💕LOVEATIQAH0123456789";
+    const fontSizeMat = 16;
+    let columnsMat = Math.floor(canvas.width / fontSizeMat);
+    let dropsMat = [];
+    
+    function initDrops() {
+        columnsMat = Math.floor(canvas.width / fontSizeMat);
+        dropsMat = [];
+        for (let i = 0; i < columnsMat; i++) {
+            dropsMat[i] = Math.random() * canvas.height / fontSizeMat;
+        }
+    }
+    initDrops();
+    
+    function drawMatrix() {
+        if (!ctx) return;
+        ctx.fillStyle = "rgba(10, 10, 30, 0.08)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.font = `${fontSizeMat}px "Segoe UI Emoji", monospace`;
+        for (let i = 0; i < dropsMat.length; i++) {
+            const char = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+            const x = i * fontSizeMat;
+            const y = dropsMat[i] * fontSizeMat;
+            const gradient = ctx.createLinearGradient(x, y, x + 10, y - 10);
+            gradient.addColorStop(0, "#ff77aa");
+            gradient.addColorStop(1, "#ffb3d9");
+            ctx.fillStyle = gradient;
+            ctx.fillText(char, x, y);
+            if (y > canvas.height && Math.random() > 0.975) {
+                dropsMat[i] = 0;
+            }
+            dropsMat[i] += 0.65;
+        }
+        requestAnimationFrame(drawMatrix);
+    }
+    drawMatrix();
+    
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+        initDrops();
+    });
+    
+    // ==================== HEART GALLERY WITH IMAGES ====================
+    // Beautiful sample images (using Unsplash and placeholder but we'll create beautiful gradients with initials)
+    // To make it feel personal and romantic, I'll use a mix of lovely image URLs and custom generated ones.
+    // Using free, reliable image placeholders with romantic themes
+    const imageUrls = [
+        "https://picsum.photos/id/20/300/300",      // coffee nature
+        "https://picsum.photos/id/104/300/300",     // girl portrait
+        "https://picsum.photos/id/169/300/300",     // sunset
+        "https://picsum.photos/id/23/300/300",      // pink flowers
+        "https://picsum.photos/id/42/300/300",      // piano
+        "https://picsum.photos/id/96/300/300",      // mountain lake
+        "https://picsum.photos/id/58/300/300",      // wheat field
+        "https://picsum.photos/id/30/300/300",      // coffee beans
+        "https://picsum.photos/id/155/300/300"      // heart shaped rock
+    ];
+    
+    const romanticTitles = [
+        "💖 First Smile", "🌸 Beautiful Soul", "🌷 Sweet Moments", 
+        "🌹 Endless Love", "💕 You & Me", "✨ My Sunshine", 
+        "🌺 Gorgeous You", "💐 True Heart", "🌟 Forever"
+    ];
+    
+    let heartsBuilt = 0;
+    const totalHearts = 9;
+    let animationInterval = null;
+    let surpriseActivated = false;
+    
+    const heartsGrid = document.getElementById("heartsGrid");
+    const heartCounterSpan = document.getElementById("heartCounter");
+    const buildingStatusDiv = document.getElementById("buildingStatus");
+    const surpriseBtn = document.getElementById("surpriseBtn");
+    const messageSection = document.getElementById("messageSection");
+    const loveMessageP = document.getElementById("loveMessage");
+    const signatureSpan = document.getElementById("signatureText");
+    
+    // Create SVG Heart Path
+    function getHeartSVG() {
+        return `<svg viewBox="0 0 100 100" class="heart-svg">
+            <defs>
+                <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ff99cc;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ff4da6;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <path class="heart-bg" d="M50,15 L65,5 L80,15 L90,30 L85,50 L70,70 L50,88 L30,70 L15,50 L10,30 L20,15 L35,5 L50,15Z" fill="url(#heartGradient)" stroke="#ff77aa" stroke-width="2"/>
+        </svg>`;
+    }
+    
+    // Function to create a heart card with image
+    function createHeartCard(index, imageUrl, title) {
+        const card = document.createElement("div");
+        card.className = "heart-card";
+        card.style.animationDelay = `${index * 0.12}s`;
+        
+        // Inner HTML: SVG heart + image overlay
+        card.innerHTML = `
+            ${getHeartSVG()}
+            <img class="heart-image" src="${imageUrl}" alt="${title}" loading="lazy">
+        `;
+        
+        // Add click effect to show a small popup message
+        card.addEventListener("click", () => {
+            if (!surpriseActivated) {
+                // Show a temporary floating message
+                showFloatingMessage(`❤️ ${romanticTitles[index]} ❤️`, card);
+            }
+        });
+        
+        return card;
+    }
+    
+    // Floating tiny message when clicking heart
+    function showFloatingMessage(msg, element) {
+        const floating = document.createElement("div");
+        floating.innerText = msg;
+        floating.style.position = "fixed";
+        floating.style.left = element.getBoundingClientRect().left + element.clientWidth/2 + "px";
+        floating.style.top = element.getBoundingClientRect().top - 20 + "px";
+        floating.style.transform = "translateX(-50%)";
+        floating.style.backgroundColor = "#ff4da6";
+        floating.style.color = "white";
+        floating.style.padding = "5px 12px";
+        floating.style.borderRadius = "25px";
+        floating.style.fontSize = "14px";
+        floating.style.fontWeight = "bold";
+        floating.style.zIndex = "10000";
+        floating.style.whiteSpace = "nowrap";
+        floating.style.boxShadow = "0 5px 15px rgba(0,0,0,0.3)";
+        floating.style.animation = "floatUp 1s ease-out forwards";
+        floating.style.pointerEvents = "none";
+        document.body.appendChild(floating);
+        setTimeout(() => floating.remove(), 1000);
+    }
+    
+    // Build hearts one by one with animation
+    function buildHeartsSequentially() {
+        let currentIndex = 0;
+        
+        animationInterval = setInterval(() => {
+            if (currentIndex < totalHearts) {
+                // Create heart card with image
+                const heartCard = createHeartCard(currentIndex, imageUrls[currentIndex], romanticTitles[currentIndex]);
+                heartsGrid.appendChild(heartCard);
+                heartsBuilt++;
+                heartCounterSpan.innerText = `${heartsBuilt} / ${totalHearts}`;
+                
+                // Create floating heart particle when heart appears
+                createFloatingHeartParticle();
+                
+                currentIndex++;
+            } else {
+                clearInterval(animationInterval);
+                // All hearts built!
+                buildingStatusDiv.innerHTML = `<span>🎉 ${totalHearts} hearts filled with love! 🎉</span>`;
+                buildingStatusDiv.style.color = "#ffddaa";
+                surpriseBtn.style.display = "inline-block";
+                
+                // Add final celebration effect
+                setTimeout(() => {
+                    createFireworkEffect();
+                }, 500);
+            }
+        }, 400); // New heart every 0.4 seconds
+    }
+    
+    // Floating heart particles when heart appears
+    function createFloatingHeartParticle() {
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                const particle = document.createElement("div");
+                particle.innerHTML = "❤️";
+                particle.classList.add("floating-item");
+                particle.style.left = Math.random() * 100 + "vw";
+                particle.style.fontSize = (15 + Math.random() * 20) + "px";
+                particle.style.animationDuration = (2 + Math.random() * 2) + "s";
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 3000);
+            }, i * 80);
+        }
+    }
+    
+    // Firework effect when all hearts built
+    function createFireworkEffect() {
+        for (let i = 0; i < 30; i++) {
+            setTimeout(() => {
+                const firework = document.createElement("div");
+                firework.innerHTML = ["✨", "💖", "🌸", "🌹", "❤️", "💐"][Math.floor(Math.random() * 6)];
+                firework.classList.add("floating-item");
+                firework.style.left = Math.random() * 100 + "vw";
+                firework.style.top = Math.random() * 80 + "vh";
+                firework.style.fontSize = (20 + Math.random() * 25) + "px";
+                firework.style.animation = "floatUp 1.5s ease-out forwards";
+                firework.style.bottom = "auto";
+                firework.style.top = Math.random() * 100 + "vh";
+                document.body.appendChild(firework);
+                setTimeout(() => firework.remove(), 1500);
+            }, i * 60);
+        }
+    }
+    
+    // Surprise Button Action: Show full birthday message + extra floating flowers & hearts
+    function showSurpriseMessage() {
+        if (surpriseActivated) return;
+        surpriseActivated = true;
+        
+        // Hide button after click
+        surpriseBtn.style.display = "none";
+        
+        // Beautiful heartfelt message from original text
+        const fullMessage = `Happy Birthday to my most beautiful, loving, gorgeous and caring girlfriend also garanggg grr!!! ❤️<br><br>
+        I love you so much and I'll be supporting you always. I know you've had your struggles but I know you'll be able to overcome it all!! 😍❤️<br><br>
+        I can't imagine living without you, you were the first ever person to make me feel loved and appreciated and had never failed to put a smile on my face ever since I met you 😊<br><br>
+        Every day with you feels like a book I never want to finish reading. You made love songs that once felt ordinary suddenly make sense. You made me believe that fate isn't just a word—because you, Nur Atiqah Aliya, you were meant for me 💕<br><br>
+        Today is your birthday, and I just want you to know one thing: in a life full of crossroads and uncertainties, you are not just a stop along the way. You are my way home.<br><br>
+        You're the best girlfriend ever my lovee! Happy Birthday Again Nur Atiqah Aliya, I love you sooo muchhh ✨✨✨<br><br>
+        <strong>sooo muchhh ✨3</strong>`;
+        
+        loveMessageP.innerHTML = fullMessage;
+        signatureSpan.innerHTML = "💖 Forever yours, with all my heart 💖";
+        messageSection.style.display = "block";
+        
+        // Start massive floating flowers and hearts
+        startMassiveFloatingElements();
+        
+        // Scroll message into view smoothly
+        messageSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Add extra glamour to hearts
+        document.querySelectorAll('.heart-card').forEach(card => {
+            card.style.animation = "heartAppear 0.6s cubic-bezier(0.34,1.2,0.64,1)";
+        });
+    }
+    
+    // Massive floating hearts, flowers, bouquets
+    let floatingInterval;
+    function startMassiveFloatingElements() {
+        if (floatingInterval) clearInterval(floatingInterval);
+        
+        const flowerSet = ["🌹", "🌸", "🌷", "🌼", "🌻", "🌺", "💐", "❤️", "💖", "💗", "🌿🌸", "💐🌹", "🌸🌷💐"];
+        
+        floatingInterval = setInterval(() => {
+            const item = document.createElement("div");
+            const isBouquet = Math.random() > 0.7;
+            if (isBouquet) {
+                item.innerHTML = ["💐🌹🌸", "🌸🌷💐", "🌼🌻🌹", "💐❤️🌹"][Math.floor(Math.random() * 4)];
+                item.style.fontSize = (28 + Math.random() * 20) + "px";
+            } else {
+                item.innerHTML = flowerSet[Math.floor(Math.random() * flowerSet.length)];
+                item.style.fontSize = (20 + Math.random() * 25) + "px";
+            }
+            item.classList.add("floating-item");
+            item.style.left = Math.random() * 100 + "vw";
+            item.style.animationDuration = (3 + Math.random() * 4) + "s";
+            document.body.appendChild(item);
+            setTimeout(() => item.remove(), 5000);
+        }, 250);
+        
+        // Also add burst of hearts every 2 seconds
+        setInterval(() => {
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const heartBurst = document.createElement("div");
+                    heartBurst.innerHTML = "❤️";
+                    heartBurst.classList.add("floating-item");
+                    heartBurst.style.left = Math.random() * 100 + "vw";
+                    heartBurst.style.fontSize = (18 + Math.random() * 22) + "px";
+                    heartBurst.style.animationDuration = (2.5 + Math.random() * 2.5) + "s";
+                    document.body.appendChild(heartBurst);
+                    setTimeout(() => heartBurst.remove(), 4000);
+                }, i * 50);
+            }
+        }, 2000);
+    }
+    
+    // Initialize: Build hearts sequentially with images inside
+    buildHeartsSequentially();
+    
+    // Attach surprise button event
+    surpriseBtn.addEventListener("click", showSurpriseMessage);
+    
+    // Also add floating background flowers pre-surprise (gentle)
+    function gentleBackgroundFlowers() {
+        setInterval(() => {
+            if (!surpriseActivated) {
+                const gentle = document.createElement("div");
+                gentle.innerHTML = ["🌸", "🌷", "💕", "✨"][Math.floor(Math.random() * 4)];
+                gentle.classList.add("floating-item");
+                gentle.style.left = Math.random() * 100 + "vw";
+                gentle.style.fontSize = (14 + Math.random() * 12) + "px";
+                gentle.style.animationDuration = (5 + Math.random() * 4) + "s";
+                gentle.style.opacity = "0.5";
+                document.body.appendChild(gentle);
+                setTimeout(() => gentle.remove(), 6000);
+            }
+        }, 1500);
+    }
+    gentleBackgroundFlowers();
+    
+    // Preload images effect: add note
+    console.log("❤️ Heart gallery ready - Building hearts with photos inside!");
+</script>
+
+</body>
+</html>
