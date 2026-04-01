@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Happy Birthday My Love ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: #0a0a0a;
+            font-family: 'Segoe UI', 'Poppins', 'Quicksand', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* canvas background */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* main container - HORIZONTAL LAYOUT, MIDDLE CENTERED */
+        .birthday-container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 1300px;
+            margin: 40px auto;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 56px;
+            padding: 30px 40px;
+            box-shadow: 0 25px 50px rgba(255, 77, 166, 0.3), 0 0 0 1px rgba(255, 105, 180, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* HORIZONTAL FLEX ROW */
+        .horizontal-layout {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        /* LEFT SIDE: PHOTO + BUTTON ZONE */
+        .photo-side {
+            flex: 1.2;
+            min-width: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+        }
+
+        .photo-frame {
+            background: linear-gradient(135deg, #ffb6c1, #ff4da6);
+            padding: 8px;
+            border-radius: 48px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.4), 0 0 0 4px rgba(255, 255, 255, 0.2);
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .photo-frame:hover {
+            transform: scale(1.02);
+        }
+
+        #birthdayPhoto {
+            max-width: 320px;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            border-radius: 40px;
+            display: block;
+            background: #2a1a2a;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        /* default placeholder style if image missing */
+        .photo-placeholder {
+            background: linear-gradient(145deg, #ff99cc, #ff3388);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 28px;
+            color: white;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            font-family: monospace;
+        }
+
+        .surprise-btn {
+            background: radial-gradient(circle at 30% 10%, #ff5e9e, #ff1a6e);
+            border: none;
+            padding: 16px 36px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 60px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 30, 110, 0.5);
+            transition: 0.2s;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(2px);
+            font-family: inherit;
+        }
+
+        .surprise-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 12px rgba(255, 30, 110, 0.7);
+        }
+
+        /* RIGHT SIDE: MESSAGE AREA (horizontal text block) */
+        .message-side {
+            flex: 2;
+            min-width: 280px;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .message-card {
+            background: rgba(20, 10, 20, 0.7);
+            border-radius: 48px;
+            padding: 28px 32px;
+            backdrop-filter: blur(4px);
+            border-left: 5px solid #ff77aa;
+            color: #fff5f0;
+            font-size: 1.05rem;
+            line-height: 1.65;
+            text-align: left;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .greeting-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #ff88bb;
+            padding-bottom: 12px;
+        }
+
+        .greeting-header h2 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #ffb347, #ff6a88);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .message-text {
+            font-weight: 400;
+            text-shadow: 0 1px 1px black;
+        }
+
+        .message-text p {
+            margin: 18px 0;
+        }
+
+        .signature {
+            margin-top: 20px;
+            font-style: italic;
+            text-align: right;
+            font-size: 1rem;
+            color: #ffbbdd;
+            border-top: 1px solid #ff88aa;
+            padding-top: 14px;
+        }
+
+        /* scrollbar style */
+        .message-side::-webkit-scrollbar {
+            width: 5px;
+        }
+        .message-side::-webkit-scrollbar-track {
+            background: #2a1a2a;
+            border-radius: 10px;
+        }
+        .message-side::-webkit-scrollbar-thumb {
+            background: #ff77aa;
+            border-radius: 10px;
+        }
+
+        /* floating hearts animation */
+        .heart-float {
+            position: fixed;
+            bottom: -20px;
+            font-size: 22px;
+            pointer-events: none;
+            z-index: 99;
+            animation: floatUpLove linear forwards;
+            filter: drop-shadow(0 0 4px #ff4da6);
+        }
+
+        @keyframes floatUpLove {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh) rotate(25deg) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* responsiveness: on smaller screens, keep horizontal but stack gracefully */
+        @media (max-width: 780px) {
+            .horizontal-layout {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .birthday-container {
+                padding: 24px 20px;
+                margin: 20px;
+            }
+            .message-side {
+                max-height: 50vh;
+            }
+            .surprise-btn {
+                padding: 12px 28px;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Additional sparkle effect */
+        .glow-text {
+            animation: gentlePulse 1.8s infinite;
+        }
+
+        @keyframes gentlePulse {
+            0% { text-shadow: 0 0 2px #ff88bb; }
+            50% { text-shadow: 0 0 12px #ff4da6, 0 0 5px white; }
+            100% { text-shadow: 0 0 2px #ff88bb; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="matrixCanvas"></canvas>
+
+<div class="birthday-container">
+    <div class="horizontal-layout">
+        <!-- LEFT: PHOTO + CLICK BUTTON (Horizontal placement) -->
+        <div class="photo-side">
+            <div class="photo-frame">
+                <img id="birthdayPhoto" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23ff99cc'/%3E%3Ctext x='50%25' y='50%25' font-size='24' fill='white' text-anchor='middle' dy='.3em' font-family='monospace'%3E✨ Nur Atiqah ✨%3C/text%3E%3C/svg%3E"
+                     alt="Birthday love">
+            </div>
+            <button class="surprise-btn" id="surpriseTrigger">🎁 Click for Surprise ❤️</button>
+        </div>
+
+        <!-- RIGHT: MESSAGE AREA (horizontal style, middle aligned text) -->
+        <div class="message-side">
+            <div class="message-card" id="messageCard">
+                <div class="greeting-header">
+                    <h2>💖 Happy Birthday Sayang 💖</h2>
+                    <div style="font-size: 1.2rem; color:#ffb7c5;">✨ Nur Atiqah Aliya ✨</div>
+                </div>
+                <div class="message-text" id="dynamicMessage">
+                    <!-- The heartfelt content will be inserted here after click, but we also preload first preview? We'll show placeholder until click? Actually surprise reveals full message. Better show teaser but full upon click. Let's set initially hidden? We want surprise effect, but we also want horizontal layout steady. Initially show minimal intro but after click full heartfelt. Let's make the full message hidden until click, but also reveal photo + music. -->
+                    <p style="text-align:center; opacity:0.8;">🌸 Press the surprise button to reveal my heart for you 🌸</p>
+                    <p style="text-align:center;">💌 <em>Something special is waiting...</em> 💌</p>
+                </div>
+                <div class="signature" id="signatureLine" style="opacity:0.6;">
+                    with all my love ❤️
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<audio id="bgMusic" preload="auto" loop></audio>
+
+<script>
+    // -------------------------------
+    // 1. MATRIX BACKGROUND (PINK THEME)
+    // -------------------------------
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    const lettersArr = "❤️💖✨🌸🎂💕NURATIQAHALIYA0123456789LOVE";
+    const fontSize = 18;
+    let columns = Math.floor(canvas.width / fontSize);
+    let drops = [];
+
+    function initDrops() {
+        columns = Math.floor(canvas.width / fontSize);
+        drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * canvas.height / fontSize;
+        }
+    }
+    initDrops();
+
+    function drawMatrix() {
+        if (!ctx) return;
+        ctx.fillStyle = "rgba(0, 0, 0, 0.07)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.font = `${fontSize}px "Segoe UI Emoji", "Courier New", monospace`;
+        for (let i = 0; i < drops.length; i++) {
+            const char = lettersArr.charAt(Math.floor(Math.random() * lettersArr.length));
+            const x = i * fontSize;
+            const y = drops[i] * fontSize;
+            // gradient pink/white
+            const gradient = ctx.createLinearGradient(x, y, x+10, y-10);
+            gradient.addColorStop(0, "#ff77aa");
+            gradient.addColorStop(1, "#ffb3d9");
+            ctx.fillStyle = gradient;
+            ctx.fillText(char, x, y);
+            if (y > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i] += 0.65;
+        }
+        requestAnimationFrame(drawMatrix);
+    }
+    drawMatrix();
+
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+        initDrops();
+    });
+
+    // -------------------------------
+    // 2. SURPRISE LOGIC: Show Full Message, Change Photo, Music, Hearts
+    // -------------------------------
+    const surpriseBtn = document.getElementById("surpriseTrigger");
+    const messageContainer = document.getElementById("dynamicMessage");
+    const signatureSpan = document.getElementById("signatureLine");
+    const photoImg = document.getElementById("birthdayPhoto");
+    const music = document.getElementById("bgMusic");
+
+    // Flag to ensure only one trigger
+    let surpriseActivated = false;
+    let heartInterval = null;
+
+    // The full beautiful letter inspired by your original text + extra romance
+    const fullLoveMessage = `
+        <p>🎀 <strong>Click for Surprise ❤️</strong> 🎀</p>
+        <p>Happy Birthday to my most beautiful, loving, gorgeous and caring girlfriend also <strong>garanggg grr!!!</strong> 😘❤️</p>
+        <p>I love you so much and I'll be supporting you always. I know you've had your struggles but I know you'll be able to overcome it all!! 😍❤️</p>
+        <p>I can't imagine living without you, you were the first ever person to make me feel loved and appreciated and had never failed to put a smile on my face ever since I met you 😊</p>
+        <p><em>“Every day with you feels like a book I never want to finish reading. You made love songs that once felt ordinary suddenly make sense. You made me believe that fate isn't just a word—because you, Nur Atiqah Aliya, you were meant for me 💕”</em></p>
+        <p>You're the best girlfriend ever my lovee! <br/> Happy Birthday Again Nur Atiqah Aliya, I love you sooo muchhh ✨✨✨</p>
+        <p>💖 <strong>sooo muchhh ✨3</strong> 💖</p>
+        <p style="font-size:1.1rem; text-align:center;">🌟 You're my home, my light, my everything 🌟</p>
+    `;
+
+    // Also signature update
+    const fullSignature = `💌 Forever yours, with all my soul — I love you endlessly 💌`;
+
+    // We'll also replace the image with a romantic default (if no external image, but we can embed a beautiful placeholder OR you can use a nice dataURL. For demonstration, I'll create a stylish gradient canvas image with name and hearts to keep the horizontal photo beautiful.)
+    function generateRomanticImage() {
+        // Create an offline canvas to generate a beautiful custom birthday image with name & hearts
+        const offCanvas = document.createElement('canvas');
+        const ctxImg = offCanvas.getContext('2d');
+        const width = 500, height = 400;
+        offCanvas.width = width;
+        offCanvas.height = height;
+        // background gradient
+        const grad = ctxImg.createLinearGradient(0, 0, width, height);
+        grad.addColorStop(0, '#ffb7c5');
+        grad.addColorStop(0.5, '#ff85b3');
+        grad.addColorStop(1, '#ff4d94');
+        ctxImg.fillStyle = grad;
+        ctxImg.fillRect(0, 0, width, height);
+        // Draw hearts and text
+        ctxImg.fillStyle = 'white';
+        ctxImg.font = `bold 40px "Segoe UI Emoji"`;
+        ctxImg.shadowBlur = 8;
+        ctxImg.shadowColor = "rgba(0,0,0,0.3)";
+        ctxImg.fillText("❤️", width/2 - 70, 100);
+        ctxImg.fillText("💖", width/2 + 40, 90);
+        ctxImg.font = `bold 34px "Segoe UI", "Poppins"`;
+        ctxImg.fillStyle = "#fff3e6";
+        ctxImg.shadowBlur = 4;
+        ctxImg.fillText("NUR ATIQAH", width/2 - 110, 190);
+        ctxImg.font = `26px monospace`;
+        ctxImg.fillStyle = "#ffffdd";
+        ctxImg.fillText("✨ Birthday Queen ✨", width/2 - 100, 260);
+        ctxImg.font = `30px "Segoe UI Emoji"`;
+        ctxImg.fillText("🌸🎂🌸", width/2 - 50, 330);
+        // little stars
+        for(let i=0;i<60;i++) {
+            ctxImg.fillStyle = `rgba(255,240,200,${Math.random() * 0.7})`;
+            ctxImg.fillRect(Math.random()*width, Math.random()*height, 2, 2);
+        }
+        return offCanvas.toDataURL();
+    }
+
+    // Set default image (generated artistic) before surprise? but after surprise we'll set a new romantic image. But to be consistent with horizontal layout, we set a nice default but also the surprise will change it.
+    // Let's load default generated image
+    const defaultImageUrl = generateRomanticImage();
+    photoImg.src = defaultImageUrl;
+    photoImg.style.aspectRatio = "4/3";
+    photoImg.style.objectFit = "cover";
+
+    // For after surprise: we will create another even more romantic image OR we can set a different image. But we can also keep the same style but we replace to show extra love. I'll create second enhanced image.
+    function getSurpriseImage() {
+        const canvasImg = document.createElement('canvas');
+        const w = 500, h = 400;
+        canvasImg.width = w;
+        canvasImg.height = h;
+        const ctx2 = canvasImg.getContext('2d');
+        const grad2 = ctx2.createLinearGradient(0, 0, w, h);
+        grad2.addColorStop(0, '#ff6a88');
+        grad2.addColorStop(0.6, '#ff99ac');
+        grad2.addColorStop(1, '#ffb86b');
+        ctx2.fillStyle = grad2;
+        ctx2.fillRect(0, 0, w, h);
+        ctx2.fillStyle = '#fff0e0';
+        ctx2.font = `bold 38px "Segoe UI", system-ui`;
+        ctx2.shadowBlur = 5;
+        ctx2.fillText("💗", w/2-120, 85);
+        ctx2.fillText("💗", w/2+80, 85);
+        ctx2.font = `bold 30px "Poppins"`;
+        ctx2.fillStyle = "#2d1b2a";
+        ctx2.fillText("My Love", w/2-70, 160);
+        ctx2.font = `26px "Segoe UI"`;
+        ctx2.fillStyle = "#ffe4f3";
+        ctx2.fillText("Atiqah Aliya", w/2-90, 230);
+        ctx2.font = `22px cursive`;
+        ctx2.fillStyle = "#ffffbb";
+        ctx2.fillText("✨ you are my universe ✨", w/2-140, 310);
+        ctx2.font = `36px "Segoe UI Emoji"`;
+        ctx2.fillText("❤️‍🔥", w/2-30, 380);
+        return canvasImg.toDataURL();
+    }
+
+    // Create music if needed: we embed a silent base but user must interact due to autoplay policies. We'll try to play after user click. Perfect.
+    // I'll create a very short silent audio? Actually we need a real music file: Since there is no external mp3, we generate an ambient web audio? However the best: play a simple browser beep? Not romantic. I'll embed an online royalty free happy birthday tune? but safer to use an audio context? Instead, I'll add a simple melodious sound using Web Audio? But to ensure no broken file, I can embed a dataURL? For user experience, I can just use "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" but that may not be reliable. Instead, I'll use a nice <audio> and set src to a royalty free birthday melody from the web? but to avoid network issues, I create an optional silent fallback? Actually I will use Web Audio API to generate a sweet happy birthday arpeggio? But that can be complex. Let's instead use the standard approach: if user clicks, we attempt to play a hidden audio but I'll add a small snippet from a free source? Better: Create an oscillator to play simple notes as a surprise. But for simplicity and elegance, I'll just rely on floating hearts and visual magic, and skip music autoplay requirement to avoid error. Instead we play subtle 'ding' or use a cute beep? Hmm, original requirement: music is optional but I'll use a simple Web Audio to generate a short romantic chime. So that no external file needed and still delightful.
+    function playRomanticChime() {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            const audioCtx = new AudioCtx();
+            const now = audioCtx.currentTime;
+            const notes = [523.25, 587.33, 659.25, 698.46, 783.99];
+            notes.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.15, now + idx * 0.25);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.25 + 1.2);
+                osc.start(now + idx * 0.25);
+                osc.stop(now + idx * 0.25 + 1);
+            });
+        } catch(e) { console.log("audio context not started"); }
+    }
+
+    // hearts generator
+    function createHearts() {
+        if (heartInterval) clearInterval(heartInterval);
+        heartInterval = setInterval(() => {
+            const heartDiv = document.createElement('div');
+            heartDiv.className = 'heart-float';
+            const heartSymbols = ['❤️', '💖', '💗', '💓', '🌸', '✨', '💕', '🎂'];
+            heartDiv.innerHTML = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+            heartDiv.style.left = Math.random() * 100 + '%';
+            heartDiv.style.fontSize = (18 + Math.random() * 28) + 'px';
+            heartDiv.style.animationDuration = (3.5 + Math.random() * 3) + 's';
+            heartDiv.style.opacity = 0.9;
+            document.body.appendChild(heartDiv);
+            setTimeout(() => { if(heartDiv && heartDiv.remove) heartDiv.remove(); }, 5000);
+        }, 280);
+    }
+
+    function activateSurprise() {
+        if (surpriseActivated) return;
+        surpriseActivated = true;
+
+        // Update message with full heartfelt text
+        messageContainer.innerHTML = fullLoveMessage;
+        signatureSpan.innerHTML = fullSignature;
+        signatureSpan.style.opacity = "1";
+        signatureSpan.style.fontWeight = "bold";
+        signatureSpan.style.color = "#ffc0e0";
+
+        // Change photo to romantic custom surprise image
+        photoImg.src = getSurpriseImage();
+        photoImg.style.transform = "scale(1.01)";
+        photoImg.style.transition = "0.4s";
+
+        // Add slight border glow effect
+        document.querySelector('.photo-frame').style.boxShadow = "0 0 0 5px #ffb7c5, 0 25px 40px rgba(255,80,120,0.8)";
+        
+        // Play romantic chime melody
+        playRomanticChime();
+        
+        // start floating hearts extravaganza
+        createHearts();
+        
+        // also add tiny class to header
+        const greetingHeader = document.querySelector('.greeting-header h2');
+        if(greetingHeader) greetingHeader.classList.add('glow-text');
+        
+        // optional confetti effect? add little extra
+        for(let i=0; i<30; i++) {
+            setTimeout(() => {
+                const spark = document.createElement('div');
+                spark.style.position = 'fixed';
+                spark.style.left = Math.random() * 100 + '%';
+                spark.style.top = Math.random() * 100 + '%';
+                spark.style.width = '6px';
+                spark.style.height = '6px';
+                spark.style.background = `hsl(${Math.random() * 40 + 320}, 100%, 70%)`;
+                spark.style.borderRadius = '50%';
+                spark.style.pointerEvents = 'none';
+                spark.style.zIndex = '999';
+                spark.style.opacity = '0.8';
+                document.body.appendChild(spark);
+                setTimeout(() => spark.remove(), 800);
+            }, i * 50);
+        }
+        
+        // Change button text and disable
+        surpriseBtn.innerHTML = "💖 Surprise Unleashed! Love you 💖";
+        surpriseBtn.disabled = true;
+        surpriseBtn.style.opacity = "0.8";
+        surpriseBtn.style.cursor = "default";
+    }
+
+    surpriseBtn.addEventListener("click", activateSurprise);
+    
+    // Preload fallback: ensure that music isn't needed because we use web audio melody, no broken file.
+    // Also ensure that no console errors for missing mp3, we removed external dependency.
+    // horizontal layout perfect.
+    
+    // additional polish: set default message card background and ensure on load, horizontal middle
+    window.addEventListener('load', () => {
+        // fix any initial scaling
+        resizeCanvas();
+        initDrops();
+    });
+</script>
+</body>
+</html>
